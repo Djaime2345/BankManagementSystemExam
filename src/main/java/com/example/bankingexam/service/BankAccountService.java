@@ -7,13 +7,22 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
+/**
+ * Service class for Bank account
+ */
 @Service
 public class BankAccountService {
     private final Map<Long, BankAccount> accounts = new HashMap<>();
     private long currentId = 1;
 
+    /**
+     * Constructor for the Bank Account Class
+     *
+     * @param accountHolder that must not be blank
+     * @param initialBalance that must be greater than 0
+     * @return The bank account created
+     */
     public BankAccount createAccount(String accountHolder, double initialBalance) {
         // Check if balance is correct
         if (initialBalance < 0){
@@ -29,13 +38,21 @@ public class BankAccountService {
         BankAccount bankAccount = new BankAccount(this.currentId, accountHolder, initialBalance);
         accounts.put(this.currentId, bankAccount);
         this.currentId++;
-        return bankAccount; // Temporary return, you should replace it with the appropriate value according to the method's logic.
+        return bankAccount;
     }
 
+    /**
+     * Method that deposit an amount of money to an account
+     *
+     * @param accountId where the money will be deposited. Must exist in the system
+     * @param amount must be greater than 0
+     */
     public void deposit(long accountId, double amount) {
-        // Implement logic here
+        // Check if account exits
         try {
             BankAccount optionalBankAccount = this.getAccount(accountId);
+
+            // Check if amount is valid
             if (amount > 0){
                 optionalBankAccount.setBalance(optionalBankAccount.getBalance() + amount);
             } else {
@@ -47,6 +64,13 @@ public class BankAccountService {
 
     }
 
+    /**
+     * Method that withdraw an amount of money from an account
+     *
+     * @param accountId where the money will be withdrawn. Must exist in the system
+     * @param amount must be greater than 0
+     * @throws InsufficientFundsException if there is not enough money to withdraw
+     */
     public void withdraw(long accountId, double amount) throws InsufficientFundsException {
         // Check if account exits
         try {
@@ -67,21 +91,20 @@ public class BankAccountService {
         }
     }
 
+    /**
+     * Method that return an account of the system
+     *
+     * @param accountId ID of the account
+     * @return The account for that ID
+     */
     public BankAccount getAccount(long accountId) {
-        // Implement logic here
         BankAccount optionalBankAccount = accounts.get(accountId);
 
+        // Check if the account exits in the system
         if (optionalBankAccount != null){
             return optionalBankAccount;
         } else {
             throw new NullPointerException("No account find with that id");
-        }
-         // Temporary return, you should replace it with the appropriate value according to the method's logic.
-    }
-
-    public void checkAmount(double amount) throws Exception {
-        if (amount < 0) {
-            throw new Exception("Amount must be positive");
         }
     }
 }
