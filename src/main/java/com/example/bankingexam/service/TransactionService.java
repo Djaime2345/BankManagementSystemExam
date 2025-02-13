@@ -21,13 +21,40 @@ public class TransactionService {
     }
 
     public void recordTransaction(long accountId, double amount, TransactionType type) {
+        // Check if account exits
+        try{
+            bankAccountService.getAccount(accountId);
+        } catch (NullPointerException e){
+            throw new NullPointerException(e.getMessage());
+        }
 
-        // Implement logic here
+        // Check if amount is correct for transaction
+        if (amount <= 0){
+            throw new RuntimeException("Amount must be greater than 0");
+        }
+
+        // Create new list of transactions if it is new in the history, if not, just add it
+        Transaction transaction = new Transaction(this.currentTransactionId++, accountId, amount, type, LocalDateTime.now());
+
+        if (transactions.containsKey(accountId)){
+            transactions.get(accountId).add(transaction);
+        } else {
+            List<Transaction> transactionList = new ArrayList<>();
+            transactionList.add(transaction);
+            transactions.put(accountId, transactionList);
+        }
     }
 
     public List<Transaction> getTransactionsForAccount(long accountId) {
         // Implement logic here
-        return null; // Temporary return, you should replace it with the appropriate value according to the method's logic.
+        List<Transaction> accountTransactions = new ArrayList<>();
+
+        if (transactions.containsKey(accountId)){
+            return transactions.get(accountId);
+        } else {
+            return accountTransactions;
+        }
+        // Temporary return, you should replace it with the appropriate value according to the method's logic.
     }
 
 

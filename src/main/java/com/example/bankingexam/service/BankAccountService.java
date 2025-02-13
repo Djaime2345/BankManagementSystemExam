@@ -15,10 +15,17 @@ public class BankAccountService {
     private long currentId = 1;
 
     public BankAccount createAccount(String accountHolder, double initialBalance) {
-        // Implement logic here
+        // Check if balance is correct
         if (initialBalance < 0){
             throw new RuntimeException("Balance must be positive");
         }
+
+        // Check if name is correct
+        if (accountHolder.equalsIgnoreCase("")){
+            throw new RuntimeException("Name must not be empty");
+        }
+
+        // Create the bank account with the parameters passed
         BankAccount bankAccount = new BankAccount(this.currentId, accountHolder, initialBalance);
         accounts.put(this.currentId, bankAccount);
         this.currentId++;
@@ -41,9 +48,15 @@ public class BankAccountService {
     }
 
     public void withdraw(long accountId, double amount) throws InsufficientFundsException {
-        // Implement logic here
+        // Check if account exits
         try {
             BankAccount optionalBankAccount = this.getAccount(accountId);
+            // Check if the amount is valid
+
+            if (amount <= 0){
+                throw new RuntimeException("Amount must be greater than 0");
+            }
+
             if (amount <= optionalBankAccount.getBalance()) {
                 optionalBankAccount.setBalance(optionalBankAccount.getBalance() - amount);
             } else {
