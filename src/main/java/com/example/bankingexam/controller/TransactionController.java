@@ -10,42 +10,67 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/transactions")
+/**
+ * REST API Controller for transactions
+ */
 public class TransactionController {
     private final TransactionService transactionService;
     private final BankAccountService accountService;
 
-
+    /**
+     * Default Constructor
+     *
+     * @param accountService
+     */
     public TransactionController(BankAccountService accountService) {
         this(null, accountService);
     }
 
+    /**
+     * Constructor with Service Provided
+     *
+     * @param transactionService
+     * @param accountService
+     */
     public TransactionController(TransactionService transactionService, BankAccountService accountService) {
         this.transactionService = transactionService;
         this.accountService = accountService;
     }
 
-    // Annotation with ("/record/deposit") url
+    /**
+     * Endpoint for record a deposit in the system
+     *
+     * @param accountId ID of the account to record the transaction
+     * @param amount Money to be deposited
+     * @return Message for the user
+     */
     @PostMapping("/record/deposit")
     public String recordDeposit(@RequestParam long accountId, @RequestParam double amount) {
-        // Implement logic here
         this.transactionService.recordTransaction(accountId, amount, TransactionType.DEPOSIT);
-        // Temporary return, you should replace it with the appropriate value according to the method's logic.
-        return null;
+        return "Deposit Recorded";
     }
 
-    // Annotation with ("/record/withdraw") url
+    /**
+     * Endpoint for record a withdrawn in the system
+     *
+     * @param accountId ID of the account to record the transaction
+     * @param amount Money to be deposited
+     * @return Message for the user
+     */
     @PostMapping("/record/withdraw")
     public String recordWithdraw(@RequestParam long accountId, @RequestParam double amount) {
-        // Implement logic here
         this.transactionService.recordTransaction(accountId, amount, TransactionType.WITHDRAWAL);
-        return null; // Temporary return, you should replace it with the appropriate value according to the method's logic.
-
+        return "Withdrawn Recorded";
     }
 
-    // Annotation with ("/{accountId}") url
+    /**
+     * Endpoint for the retrieve of the transactions of a bank account
+     *
+     * @param accountId ID of the bank account
+     * @return List of transactions
+     */
     @GetMapping("/{accountId}")
     public List<Transaction> getTransactions(@PathVariable long accountId) {
-        // Implement logic here
-        return this.getTransactions(accountId);// Temporary return, you should replace it with the appropriate value according to the method's logic.
+        return this.getTransactions(accountId);
     }
 }

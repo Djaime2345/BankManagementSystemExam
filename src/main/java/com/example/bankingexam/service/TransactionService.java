@@ -8,18 +8,32 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.Comparator;
 
+/**
+ * Service Class for transactions
+ */
 @Service
 public class TransactionService {
     private final ConcurrentHashMap<Long, List<Transaction>> transactions = new ConcurrentHashMap<>();
     private long currentTransactionId = 1;
     private final BankAccountService bankAccountService;
 
+    /**
+     * Constructor for transaction service
+     *
+     * @param bankAccountService
+     */
     public TransactionService(BankAccountService bankAccountService) {
         this.bankAccountService = bankAccountService;
     }
 
+    /**
+     * Method that record a transaction into the system. It saves the transactions for the same account in a list
+     *
+     * @param accountId ID of the bank account
+     * @param amount Money for the transaction
+     * @param type Type of transaction (Deposit or Withdraw)
+     */
     public void recordTransaction(long accountId, double amount, TransactionType type) {
         // Check if account exits
         try{
@@ -45,8 +59,13 @@ public class TransactionService {
         }
     }
 
+    /**
+     * Method that return the list of transactions of a bank account
+     *
+     * @param accountId ID of the bank account
+     * @return List of transactions of that bank account
+     */
     public List<Transaction> getTransactionsForAccount(long accountId) {
-        // Implement logic here
         List<Transaction> accountTransactions = new ArrayList<>();
 
         if (transactions.containsKey(accountId)){
@@ -54,8 +73,6 @@ public class TransactionService {
         } else {
             return accountTransactions;
         }
-        // Temporary return, you should replace it with the appropriate value according to the method's logic.
     }
-
 
 }
